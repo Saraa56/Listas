@@ -1,0 +1,85 @@
+def son_iguales(lista1, lista2):
+    # Verifica si las listas son exactamente iguales
+    if len(lista1) != len(lista2):
+        return False
+    for i in range(len(lista1)):
+        if lista1[i] != lista2[i]:
+            return False
+    return True
+
+def semejantes(lista1, lista2):
+    # Verifica si las listas contienen los mismos elementos
+    if len(lista1) != len(lista2):
+        return False
+    contador1 = {}
+    contador2 = {}
+    for elem in lista1:
+        if elem in contador1:
+            contador1[elem] += 1
+        else:
+            contador1[elem] = 1
+    for elem in lista2:
+        if elem in contador2:
+            contador2[elem] += 1
+        else:
+            contador2[elem] = 1
+    return contador1 == contador2
+
+def es_sublista_contenida(sublista, lista):
+    # Verifica si sublista es una sublista contenida en lista
+    len_sub = len(sublista)
+    len_lista = len(lista)
+    if len_sub == 0:
+        return True
+    if len_sub > len_lista:
+        return False
+    for i in range(len_lista - len_sub + 1):
+        if son_iguales(sublista, lista[i:i + len_sub]):
+            return True
+    return False
+
+def son_ordenadas(lista1, lista2):
+    # Verifica si las listas están ordenadas en el mismo orden
+    return son_iguales(lista1, lista2)
+
+def comparar_listas(arr):
+    if len(arr) != 5:
+        raise ValueError("El array debe contener exactamente 5 listas")
+
+    resultados = {
+        'iguales': [],
+        'semejantes': [],
+        'sublistas': [],
+        'ordenadas': []
+    }
+
+    for i in range(5):
+        for j in range(i + 1, 5):
+            lista1 = arr[i]
+            lista2 = arr[j]
+
+            if son_iguales(lista1, lista2):
+                resultados['iguales'].append((i, j))
+            if semejantes(lista1, lista2):
+                resultados['semejantes'].append((i, j))
+            if es_sublista_contenida(lista1, lista2):
+                resultados['sublistas'].append((i, j))
+            if son_ordenadas(lista1, lista2):
+                resultados['ordenadas'].append((i, j))
+
+    return resultados
+
+# Ejemplo de uso
+listas = [
+    [1, 2, 3, 4],
+    [4, 3, 2, 1],
+    [1, 2],
+    [1, 2, 3, 4],
+    [2, 3, 4]
+]
+
+resultados = comparar_listas(listas)
+print("Iguales:", resultados['iguales'])
+print("Semejantes:", resultados['semejantes'])
+print("Sublistas contenidas:", resultados['sublistas'])
+print("Ordenadas:", resultados['ordenadas'])
